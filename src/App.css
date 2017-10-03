@@ -1,0 +1,16 @@
+.App {
+  text-align: center;
+}
+
+body {
+  background-color: #194D1E;
+  color: white;
+}
+
+.Cards {
+  margin-bottom: 15px;
+}
+
+img {
+  margin: 0 auto;
+}
