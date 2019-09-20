@@ -1,24 +1,19 @@
-import React, { Component } from 'react';
-import { Nav, Navbar, NavItem } from 'react-bootstrap';
+import React from 'react';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
 
-export default class NewNavbar extends Component {
-  render() {
-    return (
-      <Navbar inverse>
-        <Navbar.Header>
-          <Navbar.Brand>
-            {this.props.brand}
-          </Navbar.Brand>
-          <Navbar.Toggle/>
-        </Navbar.Header>
-        <Navbar.Collapse>
-          <Nav pullRight>
-            <NavItem href="http://aaronmassey.pro">Home</NavItem>
-            <NavItem href="https://medium.com/@aaronmassey45">Blog</NavItem>
-            <NavItem href="https://github.com/aaronmassey45">Github</NavItem>
-          </Nav>
-        </Navbar.Collapse>
-      </Navbar>
-    );
-  }
-}
+const PageNavbar = () => (
+  <Navbar bg="dark" variant="dark" expand="lg">
+    <Navbar.Brand>High Card Draw</Navbar.Brand>
+    <Navbar.Toggle />
+    <Navbar.Collapse>
+      <Nav>
+        <Nav.Link href="https://aaronmassey.pro">Home</Nav.Link>
+        <Nav.Link href="https://medium.com/@aaronmassey45">Blog</Nav.Link>
+        <Nav.Link href="https://github.com/aaronmassey45">Github</Nav.Link>
+      </Nav>
+    </Navbar.Collapse>
+  </Navbar>
+);
+
+export default PageNavbar;
