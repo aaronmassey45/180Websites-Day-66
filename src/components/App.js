@@ -1,138 +1,50 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Button, Col, Row } from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
 
-import Card from './card';
+import CardDisplay from './CardDisplay';
 import Navbar from './navbar';
+
 import '../App.scss';
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      deck_id: '',
-      cards: '',
-      remaining: '',
-    };
-  }
+const App = () => {
+  const [deckId, setDeckId] = useState('');
+  const [cards, setCards] = useState([]);
 
-  componentDidMount() {
+  useEffect(() => {
     axios
       .get('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1')
-      .then(deck => {
-        axios
-          .get(
-            `https://deckofcardsapi.com/api/deck/${deck.data.deck_id}/draw/?count=2`
-          )
-          .then(cards => {
-            this.setState({
-              deck_id: cards.data.deck_id,
-              cards: cards.data.cards,
-              remaining: cards.data.remaining,
-            });
-          });
+      .then(response => {
+        setDeckId(response.data.deck_id);
       })
-      .catch(err => {
-        console.log(err);
-      });
-  }
+      .then(() => drawCards());
+  }, []);
 
-  drawAgain = () => {
-    this.setState({ cards: '' });
-    if (this.state.remaining === 0) {
-      axios
-        .get(
-          `https://cors-anywhere.herokuapp.com/https://deckofcardsapi.com/api/deck/${this.state.deck_id}/shuffle`
-        )
-        .then(cards => {
-          console.log(cards.data);
-          this.drawAgain();
-          this.setState({ remaining: 52 });
-        });
-    } else {
-      axios
-        .get(
-          `https://deckofcardsapi.com/api/deck/${this.state.deck_id}/draw/?count=2`
-        )
-        .then(cards => {
-          console.log(cards.data.remaining);
-          this.setState({
-            cards: cards.data.cards,
-            remaining: cards.data.remaining,
-          });
-        });
-    }
-  };
-
-  getValue(card) {
-    switch (card) {
-      case 'JACK':
-        return 11;
-      case 'QUEEN':
-        return 12;
-      case 'KING':
-        return 13;
-      case 'ACE':
-        return Math.random() > 0.5 ? 14 : 1;
-      default:
-        return card;
-    }
-  }
-
-  winner = (val1, val2) => {
-    let p1 = Number(val1);
-    let p2 = Number(val2);
-    let winner;
-
-    if (p1 > p2) {
-      winner = 'Player 1 wins!';
-    } else if (p1 < p2) {
-      winner = 'Player 2 wins!';
-    } else {
-      winner = "It's a tie!";
-    }
-    return winner;
-  };
-
-  render() {
-    let { cards } = this.state;
-
-    if (!cards) {
-      return (
-        <div className="App">
-          <Navbar brand="High Card" />
-          <h3>Ace can be high or low card!</h3>
-          <p>Drawing cards...</p>
-        </div>
-      );
-    }
-
-    let val0 = this.getValue(cards[0].value);
-    let val1 = this.getValue(cards[1].value);
-
-    return (
-      <div className="App">
-        <Navbar brand="High Card" />
-        <h3>Ace can be 1 or 14!</h3>
-        <Row>
-          <Col xs={6}>
-            <Card card={cards[0]} />
-            <p>{val0}</p>
-          </Col>
-          <Col xs={6}>
-            <Card card={cards[1]} />
-            <p>{val1}</p>
-          </Col>
-          <Col xs={12}>{this.winner(val0, val1)}</Col>
-        </Row>
-        <p>
-          <Button onClick={this.drawAgain} bsStyle="primary">
-            Draw
-          </Button>
-        </p>
-      </div>
+  async function drawCards() {
+    const response = await axios.get(
+      `https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=2`
     );
+
+    if (response.data.remaining === 0) {
+      await axios.get(`https://deckofcardsapi.com/api/deck/${deckId}/shuffle/`);
+      drawCards();
+    }
+
+    setCards(response.data.cards);
   }
-}
+
+  return (
+    <div className="App">
+      <Navbar />
+      <h3>Ace is 14!</h3>
+      {cards.length > 0 && <CardDisplay cards={cards} />}
+      <p>
+        <Button onClick={drawCards} variant="primary">
+          Draw Cards
+        </Button>
+      </p>
+    </div>
+  );
+};
 
 export default App;
