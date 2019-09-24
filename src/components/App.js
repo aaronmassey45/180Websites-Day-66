@@ -16,8 +16,7 @@ const App = () => {
       .get('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1')
       .then(response => {
         setDeckId(response.data.deck_id);
-      })
-      .then(() => drawCards());
+      });
   }, []);
 
   async function drawCards() {
