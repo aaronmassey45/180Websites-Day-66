@@ -23,15 +23,15 @@ const CardDisplay = ({ cards }) => {
     }
   }
 
-  function getWinner(val1, val2) {
-    if (val1 === val2) {
-      return "It's a tie!";
-    }
-    return `Player ${val1 > val2 ? '1' : '2'} wins!`;
-  }
-
   const cardOneValue = getValue(cardOne);
   const cardTwoValue = getValue(cardTwo);
+
+  let winMessage;
+  if (cardOneValue === cardTwoValue) {
+    winMessage = "It's a tie!";
+  } else {
+    winMessage = `Player ${cardOneValue > cardTwoValue ? '1' : '2'} wins!`;
+  }
 
   return (
     <Row>
@@ -43,7 +43,7 @@ const CardDisplay = ({ cards }) => {
         <Card card={cardTwo} />
         <p>{cardTwoValue}</p>
       </Col>
-      <Col xs={12}>{getWinner(cardOneValue, cardTwoValue)}</Col>
+      <Col xs={12}>{winMessage}</Col>
     </Row>
   );
 };
