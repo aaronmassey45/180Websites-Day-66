@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 
 const useDeck = () => {
   const [cards, setCards] = useState([]);
@@ -19,7 +19,7 @@ const useDeck = () => {
     setCards(response.data.cards);
   };
 
-  const drawCards = () => {
+  const drawCards = useCallback(() => {
     if (!deckId.current) {
       axios
         .get('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1')
@@ -30,7 +30,7 @@ const useDeck = () => {
     } else {
       getTwoCards();
     }
-  };
+  }, []);
 
   return { cards, drawCards };
 };
