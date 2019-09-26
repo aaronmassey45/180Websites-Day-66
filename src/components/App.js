@@ -11,8 +11,8 @@ const App = () => {
   const { cards, drawCards } = useDeck();
 
   useEffect(() => {
-    if (cards.length === 0) drawCards();
-  });
+    drawCards();
+  }, [drawCards]);
 
   return (
     <div className="App">
