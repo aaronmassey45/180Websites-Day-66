@@ -35,14 +35,12 @@ const CardDisplay = ({ cards }) => {
 
   return (
     <Row>
-      <Col xs={6}>
-        <Card card={cardOne} />
-        <p>{cardOneValue}</p>
-      </Col>
-      <Col xs={6}>
-        <Card card={cardTwo} />
-        <p>{cardTwoValue}</p>
-      </Col>
+      {cards.map(card => (
+        <Col xs={6} key={`${card.value}-of-${card.suit}`}>
+          <Card card={card} />
+          <p>{getValue(card)}</p>
+        </Col>
+      ))}
       <Col xs={12}>{winMessage}</Col>
     </Row>
   );
